@@ -10,7 +10,7 @@
                     name="email"
                     type="email"
                     class="form-control"
-                    
+                    v-model="loginLocal.email"
                 />
                 <ErrorMessage name="email" class="error-feedback" />
         </div>
@@ -20,7 +20,7 @@
                     name="password"
                     type="password"
                     class="form-control"
-                    
+                    v-model="loginLocal.matkhau"
                 />
                 <ErrorMessage name="password" class="error-feedback" />
         </div>
@@ -29,7 +29,7 @@
                 name="favorite"
                 type="checkbox"
                 class="form-check-input"
-                
+               
             />
             <label for="favorite" class="form-check-label">
                 <strong>Lưu mật khẩu</strong>
@@ -46,21 +46,21 @@
     </div>
 </template>
 <style>
-#login{
- margin: auto;
+    #login{
+    margin: auto;
 
-}
+    }
 
-#btn_login{
-    text-align: center;
-    margin: 5px;
+    #btn_login{
+        text-align: center;
+        margin: 5px;
 
-}
-#btn_login button{
-    margin: 0 5px 0 5px;
-}
-.error-feedback {
-    color: red;
+    }
+    #btn_login button{
+        margin: 0 5px 0 5px;
+    }
+    .error-feedback {
+        color: red;
 }
 </style>
 
@@ -75,7 +75,7 @@ export default{
     },
     emits: ["submit:login"],
     props: {
-            login: { type: Object, required: true }
+            accountlogin: { type: Object, required: true }
         },
     data(){
         const loginFormSchema = yup.object().shape({
@@ -89,14 +89,13 @@ export default{
             
         });
         return {
-            loginLocal: this.login,
+            loginLocal: {},
             loginFormSchema,
         };
     },
     methods: {
             submitLogin() {
-                console.log("Đăng nhập thành công")
-
+                console.log("submitLogin")
                 this.$emit("submit:login", this.loginLocal);
             },
             gotoRegister(){

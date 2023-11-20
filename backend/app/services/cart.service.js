@@ -2,16 +2,21 @@ const { ObjectId } = require("mongodb");
 
 
 class CartService {
+
     constructor(client){
         this.DonHang = client.db().collection("donhang")
         this.chitietDH = client.db().collection("chitietdonhang")
     }
     extractDonHangData(payload){
         const DatHang = {
-            maKH: payload.maKH,
+            email: payload.email,
             ngayDat: payload.ngaydat,
-            ngayGiao: payload.ngaygiao,
-            trangThai: payload.trangthai
+            ngayGiao: payload.ngayGiao,
+            trangThai: payload.trangThai,
+            soluong: payload.soluong,
+            thanhtien: payload.thanhtien,
+            giamgia: payload.giamgia,
+            emailql: payload.emailql
         }
 
         Object.keys(DatHang).forEach(
@@ -22,7 +27,8 @@ class CartService {
     }
     extractChitietDHData(payload){
         const chitietDH = {
-            maDH: payload.maDH,
+            maDH :payload.maDH,
+            email: payload.email,
             maHH: payload.maHH,
             soluong: payload.soluong,
             giamgia: payload.giamgia
@@ -39,11 +45,71 @@ class CartService {
     async create_cart(payload){
         const cartData= this.extractDonHangData(payload)
         const result =  await this.DonHang.findOneAndUpdate(
-            cartData,
-            {$set: {maKH: payload.maKH}},
+            {email: "ktontai"},
+            {$set: cartData},
             { returnDocument: "after",upsert: true}
         )
         return result
+    }
+    async getAllCart(){
+        try{
+            const cursor = await this.DonHang.find({})
+            return await cursor.toArray()
+        }catch(erorr){
+            console.log(erorr)
+        }
+    }
+    async getAllHHInCart(){
+        try{
+            const cursor = await this.chitietDH.find({})
+            return await cursor.toArray()
+        }catch(erorr){
+            console.log(erorr)
+        }
+    }
+    async getDSHHByMaHH(in_maDH){
+        try{
+            const cursor = await this.DonHang.find({maDH: in_maDH})
+            return await cursor.toArray()
+        }catch(erorr){
+            console.log(erorr)
+        }
+    }
+    async getCartByMaDH(in_maDH){
+        try{
+            return await this.find({maDH: in_maDH})
+        }catch(erorr){
+            console.log(erorr)
+        }
+    }
+    async getCartByEmail(in_email){
+        try{
+            return await this.find({email: in_email})
+        }catch(erorr){
+            console.log(erorr)
+        }
+    }
+    async getDSDonHang(in_email){
+        try{
+            return await this.find2({email: in_email})
+        }catch(erorr){
+            console.log(erorr)
+        }
+    }
+    async getCartDangMua(in_email){
+        try{
+            return await this.DonHang.findOne({email: in_email, trangThai: "dangmua"})
+        }catch(erorr){
+            console.log(erorr)
+        }
+    }
+    async find(filter){
+        const cursor = await this.chitietDH.find(filter)
+        return await cursor.toArray()
+    }
+    async find2(filter){
+        const cursor = await this.DonHang.find(filter)
+        return await cursor.toArray()
     }
     async update_cart(id,payload){
        
@@ -62,14 +128,32 @@ class CartService {
             console.log(erorr)
         }
     }
-    async add_product(id,payload){
+   
+    async add_product(payload){
         const product= this.extractChitietDHData(payload)
-        const result =  await this.chitietDH.findOneAndUpdate(
-            product,
-            {$set: {maDH:id}},
-            { returnDocument: "after",upsert: true}
-        )
-        return result
+        
+        const hh = await this.chitietDH.findOne({
+            maDH: product.maDH,
+            maHH: product.maHH,
+            email: product.email
+            })
+        if(hh!=null){
+
+            const result =  await this.chitietDH.findOneAndUpdate(
+                {maHH : product.maHH},
+                {$set: {soluong: product.soluong+ hh.soluong}},
+                { returnDocument: "after",upsert: true}
+                )
+            return result
+        }else{
+            const result =  await this.chitietDH.findOneAndUpdate(
+                {maHH : product.maHH},
+                {$set: product},
+                { returnDocument: "after",upsert: true}
+                )
+            return result
+        }
+        
     }
     async delete_product(id){
         const result = await this.chitietDH.findOneAndDelete({
@@ -77,6 +161,19 @@ class CartService {
         })
         return result
     }
+    async deleteDH(in_maDH){
+        const result = await this.DonHang.findOneAndDelete({
+            _id: ObjectId.isValid(in_maDH) ? new ObjectId(in_maDH): null,
+        })
+        return result
+    }
+    async deleteProInCart(in_maDH){
+        const result = await this.chitietDH.findOneAndDelete({
+            maDH: in_maDH,
+        })
+        return result
+    }
+
 
     
 }

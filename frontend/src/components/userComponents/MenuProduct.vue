@@ -3,12 +3,11 @@
         
           <div id="menu_danhmuc">Danh mục</div>
           <div  id="item_danhmuc"> 
-            <div>Iphone </div>
-            <div>Samsung</div>
-            <div>Oppo </div>
-            <div>Xiaomi </div>
-            <div>VSmart </div>
-            <div>Bkav </div>
+            <div @click="setProductType('All')" >Tất cả sản phẩm </div>
+            <div @click="setProductType('IP')" >Iphone </div>
+            <div @click="setProductType('SS')" >Samsung</div>
+            <div @click="setProductType('OP')" >Oppo </div>
+            <div @click="setProductType('XM')" >Xiaomi </div>
           </div>
           
 
@@ -51,3 +50,22 @@
 
 
 </style>
+
+<script>
+ export default {
+    // data() {
+    //   return {
+    //     products: [] 
+    //   };
+    // },
+    
+    emits: ["update:typeProduct"],
+    methods: {
+      setProductType(type) {
+        this.$emit("update:typeProduct",type)
+      },
+     
+    },
+  };
+
+</script>

@@ -1,13 +1,14 @@
 <template>
 <div id="chitiet_sanpham" class="d-flex">
-    <img id="img_chitiet" src="/images/iphone.png">
+    <img id="img_chitiet" :src="this.product.hinh">
     <div id="noidung_chitiet">
-        <div id="ten_ct">Tên sản phẩm</div>
-        <div id="mota_ct">Mô tả</div>
-        <div id="gia_ct" >10.000.000đ</div>
+        <div id="ten_ct">{{ this.product.tenHH }}</div>
+        <div id="mota_ct" >{{ this.product.mota }}</div>
+        <div class="sl"> <p>Số lượng: </p><input type="number" v-model="this.sl" ></div>
+        <div id="gia_ct">{{ dinhDangSoTien(this.product.gia)   }}</div>
         <div id="btn_ct">
-            <button class="btn btn-outline-danger">Quay lại</button>
-            <button class="btn btn-danger">Thêm vào giỏ hàng</button>
+            <button class="btn btn-outline-danger" @click="quaylai()">Quay lại</button>
+            <button class="btn btn-danger" @click="addcart(this.product,this.sl)">Thêm vào giỏ hàng</button>
         </div>
     </div>
 </div>
@@ -50,3 +51,72 @@
 
 </style>
 
+<script>
+import cartService from "../../services/cart.service";
+import productsService from "../../services/products.service";
+export default {
+    props: {
+        product: {type: Object, default: {}},
+        
+    },
+    data(){
+        return{
+            sl: 0
+        }
+    },
+    methods: {
+        dinhDangSoTien(soTien) {
+         var chuoiSoTien = ""+soTien
+         var viTriDauCham = chuoiSoTien.indexOf('.')
+         if (viTriDauCham === -1) {
+           viTriDauCham = chuoiSoTien.length
+         }
+         for (var i = viTriDauCham - 3; i > 0; i -= 3) {
+           chuoiSoTien = chuoiSoTien.slice(0, i) + '.' + chuoiSoTien.slice(i);
+         }
+         chuoiSoTien += 'đ'
+         return chuoiSoTien;
+       },
+       async addcart(product,sl){
+        if(!sl){
+            sl=1
+        }
+        if(sl<0){
+          window.alert("Số lượng không thể âm")
+
+        }else{
+            const DHHT =  await cartService.getCartDangMua(localStorage.getItem('email'))
+            const RProduct = await productsService.showProductByMaHH(product.maHH)
+            console.log()
+            const fillter={
+
+                maDH: DHHT._id,
+                email: localStorage.getItem('email'),
+                soluong:sl,
+                maHH: product.maHH,
+                giamgia:0
+            }
+            if(RProduct.soLuong > sl){
+                if(!localStorage.getItem("email")){
+                    window.alert("Mời bạn đăng nhập để có thể thêm sản phẩm vào giỏ") 
+                }else{
+                    console.log(fillter)
+                    await cartService.add_product(fillter)
+                    window.alert(`Đã thêm sản phẩm ${product.tenHH} số lượng ${sl} vào giỏ hàng` )
+                }
+                this.$router.push("/product")
+            }else{
+                window.alert(`Số lượng hàng hiện tại là ${RProduct.soLuong} \nChúng tôi không đủ số lượng bạn cần mua `)
+            }
+       
+        }
+        
+       
+       },
+       quaylai(){
+            this.$router.push('/product')
+        }
+      
+      },
+  };
+</script>

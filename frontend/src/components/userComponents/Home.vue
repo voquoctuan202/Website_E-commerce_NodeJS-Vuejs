@@ -44,7 +44,7 @@
     margin-top: 10px;
     padding-bottom: 10px;
     border-radius: 3px;
-    box-shadow:1px 1px 1px 2px rgb(181, 181, 181);
+    box-shadow:1px 1px 1px 1px rgb(222, 222, 222);
   }
   .i_mage{
     width: 90%;

@@ -11,9 +11,14 @@
             <router-link :to="{ name: 'addProduct' }">
                 <button><i class="fa fa-plus" aria-hidden="true"></i> Thêm sản phẩm</button>
             </router-link>
-
-            <router-link :to="{ name: 'adminUser' }">
+            <router-link :to="{ name: 'adminDonHang' }">
+                <button><i class="fa fa-list" aria-hidden="true"></i> Quản lý đơn hàng</button>
+            </router-link>
+            <router-link :to="{ name: 'adminUser' }"  v-if="checkadmin()">
                 <button><i class="fa fa-user" aria-hidden="true"></i> Quản lý tài khoản</button>
+            </router-link>
+            <router-link :to="{ name: 'login' }">
+                <button><i class="fa fa-sign-out" aria-hidden="true"></i> Đăng xuất</button>
             </router-link>
               
       </div>
@@ -66,7 +71,14 @@
 <script>
 export default{
     methods:{
-
+        checkadmin(){
+            const rule = localStorage.getItem('rule')
+            if(rule=="admin"){
+                return true
+            }else{
+                return false
+            }
+        }
     }
 }
 </script>

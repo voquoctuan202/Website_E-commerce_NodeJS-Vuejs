@@ -7,10 +7,13 @@ class UserService {
     }
     extractUserData(payload){
         const user = {
-            maTK: payload.maTK,
+            email: payload.email,
             tenUser: payload.tenUser,
             diachi: payload.diachi,
             sdt: payload.sdt,
+            gioitinh: payload.gioitinh,
+            ngaysinh: payload.ngaysinh,
+            nghenghiep: payload.nghenghiep
         }
 
         Object.keys(user).forEach(
@@ -41,17 +44,33 @@ class UserService {
             console.log(erorr)
         }
     }
-    async addUser(id,payload){
+    async getUserByEmail(in_email){
+   
         try{
+            return await this.user.findOne({
+                email: in_email,
+            })
+        }catch(erorr){
+            console.log(erorr)
+        }
+    }
+    async addUser(in_email){
+        try{
+        const payload={
+            maTK: "",
+            tenUser: "",
+            diachi: "",
+            sdt: ""
+        }
         const userdata= this.extractUserData(payload)
         const checkmaTK=  await this.user.findOne({
-            maTK: id
+            email: in_email
         })
         if (checkmaTK) return "Tài khoản đã tồn tại"
             else {
                 const result = await this.user.findOneAndUpdate(
                     userdata,
-                    {$set: {maTK: id}},
+                    {$set: {email: in_email}},
                     { returnDocument: "after",upsert: true})
             return result
         }
@@ -59,21 +78,26 @@ class UserService {
             console.log(erorr)
         }
     }
-    async updateUser(matk,payload){
+    async updateUser(id,payload){
         const filter = {
-            maTK: matk
+            _id: ObjectId.isValid(id) ? new ObjectId(id): null,
         }
         const update = this.extractUserData(payload)
-        const result = await this.user.findOneAndUpdate(
-            filter,
-            { $set: update},
-            { returnDocument: "after"}
-        )
-        return result;
+        try{
+            const result = await this.user.findOneAndUpdate(
+                filter,
+                { $set: update},
+                { returnDocument: "after"}
+            )
+            return result;
+        }catch(erorr){
+            console.log(erorr)
+        }
+        
     }
-    async deleteUser(matk){
+    async deleteUser(in_email){
         const result = await this.user.findOneAndDelete({
-            maTK: matk,
+            email: in_email,
         })
         return result
     }

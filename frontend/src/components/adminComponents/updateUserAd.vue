@@ -1,6 +1,6 @@
 <template>
     <div id="login" class="w-50">
-        <h2 class="tieude">Tài khoản</h2>
+        <h2 class="tieude">Chỉnh sửa tài khoản</h2>
         <Form 
             @submit="submitUpdateUser"
             :validation-schema="registerFormSchema">
@@ -67,7 +67,7 @@
         </div>
         <div class="form-group" id="btn_login">
             <button class="btn btn-danger" type="submit">Lưu</button>
-            <button class="btn btn-outline-danger"  @click="logout()">Đăng xuất</button>
+            <button class="btn btn-outline-danger" type="button" @click="huy()">Hủy</button>
             
                
         </div>
@@ -100,7 +100,7 @@ export default{
         Field,
         ErrorMessage,
     },
-    emits: ["submit:updateUser","submit:logoutUser" ],
+    emits: ["submit:updateUser"],
     props: {
             user: { type: Object, require: true},
 
@@ -121,11 +121,14 @@ export default{
     },
     methods: {
             async submitUpdateUser() {
-                const userid  = await usersService.getUserByEmail(localStorage.getItem("email")) 
-                this.$emit("submit:updateUser",userid._id, this.user);
+                console.log(this.user._id,this.user)
+                await usersService.updateUser(this.user._id,this.user)
+                window.alert("Sửa thành công")
+                this.$router.push("/adminUser")
             },
-            logout(){
-                this.$emit("submit:logoutUser");
+            huy(){
+            
+                this.$router.push("/adminUser")
             }
     
         },

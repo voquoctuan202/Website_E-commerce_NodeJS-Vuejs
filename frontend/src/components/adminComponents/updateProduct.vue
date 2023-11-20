@@ -1,8 +1,8 @@
 <template>
     <div id="add_products" class="w-50">
-        <h2 class="tieude">Thêm sản phẩm</h2>
+        <h2 class="tieude">Chỉnh sửa sản phẩm</h2>
         <Form 
-            @submit="addProduct"
+            @submit="updateProduct"
             :validation-schema="addPFormSchema">
         <div class="form-group">
         <label for="ma_sanpham">Mã sản phẩm</label>
@@ -65,7 +65,8 @@
                 <ErrorMessage name="hinh" class="error-feedback" />
         </div>
         <div id="btn_login">
-            <button class="btn btn-danger" type="submit">Thêm</button>
+            <button class="btn btn-danger" type="submit">Cập nhật</button>
+            <button class="btn btn-outline-danger" >Hủy</button>
         </div>
         
     </Form>
@@ -90,7 +91,6 @@
 
 <script>
 import * as yup from "yup";
-
 import { Form, Field, ErrorMessage } from "vee-validate";
 export default{
     components:{
@@ -98,29 +98,27 @@ export default{
         Field,
         ErrorMessage,
     },
-    emits: ["submit:AddProduct", ],
-    
+    emits:{ emits: ["submit", ]},
+    props: {
+        product: {type: Object, default: {}}
+    },
     data(){
-        const addPFormSchema = yup.object().shape({
-            email: yup
-                .string()
-                .email("E-mail không đúng.")
-                .max(50, "E-mail tối đa 50 ký tự."),
-            
+        const updateFormSchema = yup.object().shape({
             
         });
         return {
-            product:{},
             file:"",
-            addPLocal: this.user,
-            addPFormSchema,
+            updateFormSchema,
         };
     },
     methods: {
-            addProduct(){
-               
+        updateProduct(){
+            
+            if(this.file!=""){
                 this.product.hinh = `/images/${this.file.name}`
-                this.$emit("submit",this.product)
+            }
+            console.log(this.product)
+            this.$emit("submit",this.product)
 
             }
     

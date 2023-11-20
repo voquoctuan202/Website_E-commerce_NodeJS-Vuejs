@@ -22,6 +22,9 @@ app.use("/api/user",UserRouter)
 
 app.use("/api/contact", contactsRouter)
 
+
+
+
 app.use((req,res,next)=>{
     return next(new ApiError(404, "Resource not found"))
 })

@@ -7,19 +7,24 @@
         
         <table  id="table_xemhang">
           <tr >
-            <th>ID</th>
             <th>Tên người dùng</th>
+            <th>Giới tính</th>
+            <th>Ngày sinh</th>
+            <th>Địa chỉ</th>
+            <th>Số điện thoại</th>
             <th>Email</th>
-            <th>Quyền</th>
+            <th>Nghề nghiệp</th>
             <th>Xóa</th>
           </tr>
-          <tr v-for="product in products" :key="product.id">
-          
-              <th>{{ product.id }}</th>
-              <th>{{ product.name }}</th>
-              <th>{{ product.email}}</th>
-              <th>{{ product.rule }}</th>
-              <th><i class="fa fa-times" aria-hidden="true"></i></th>
+          <tr v-for="user in users" :key="user.id">
+              <td @click="updateUser(user)">{{ user.tenUser }}</td>
+              <td @click="updateUser(user)">{{ user.gioitinh}}</td>
+              <td @click="updateUser(user)">{{ user.ngaysinh}}</td>
+              <td @click="updateUser(user)">{{ user.diachi }}</td>
+              <td @click="updateUser(user)">{{ user.sdt}}</td>
+              <td @click="updateUser(user)">{{ user.email }}</td>
+              <td @click="updateUser(user)">{{ user.nghenghiep }}</td>
+              <td @click="deleteUser(user)"><i class="fa fa-times" aria-hidden="true"></i></td>
           </tr>
         </table>
           
@@ -57,21 +62,36 @@
 </style>
 
 <script>
-
+import usersService from '../../services/users.service';
+import cartService from '../../services/cart.service';
 export default {
     data() {
         return {
-            products: [
-            { id: 1, name: 'Tuan', email: "voquoctuan425@gmail.com", password: "123456", rule :1 },
-            { id: 2, name: 'Tuan', email: "voquoctuan425@gmail.com", password: "123456", rule :1 },
-            { id: 3, name: 'Tuan', email: "voquoctuan425@gmail.com", password: "123456", rule :2  },
-            ],
+
         };
     },
-    methods: {
-    addToCart(product) {
-        // Implement the cart functionality here
+    props:{
+        users: {type: Array, default:[]}
     },
+    emits:["delete:userByEmail"],
+    methods: {
+      updateUser(user){
+        console.log("update",user)
+        localStorage.user = JSON.stringify(user)
+        this.$router.push("/updateUser")
+      },
+      async deleteUser(user){
+        const checkDH = await cartService.getCartByEmail(user.email)
+        if(checkDH[0]== undefined){
+          let choice = confirm(`Xác nhận xóa user có ${user.email} này`);
+          if (choice == true) {
+            this.$emit("delete:userByEmail",user.email)
+          }
+        }else{
+          window.alert("Tài khoản có đơn hàng, không thể xóa")
+        }
+
+      }
     },
 };
 </script>

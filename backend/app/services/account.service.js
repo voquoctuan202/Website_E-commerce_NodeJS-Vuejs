@@ -23,7 +23,7 @@ class AccountService {
         const checkemail =  await this.account.findOne({
             email: accountdata.email
         })
-        if (checkemail) return "Tk đã tồn tại"
+        if (checkemail) return "0"
             else {
                 const result = await this.account.findOneAndUpdate(
                     accountdata,
@@ -33,30 +33,33 @@ class AccountService {
         }
         
     }
-    async login(payload){
-        const accountdata= this.extractAccountData(payload)
+    async login(mail,pass){
+      
         const checktk =  await this.account.findOne({
-            email: accountdata.email,
-            matkhau: accountdata.matkhau
+            email: mail,
+            matkhau: pass
         })
-        if (checktk) return "đăng nhập ok"
-            else return "Sai tk or mk"
+        if (checktk) return "true"
+            else return "false"
     }
-    async deleteAccount(payload){
-        const accountdata= this.extractAccountData(payload)
-       
+    async deleteAccount(in_email){
         try{
             const result = await this.account.findOneAndDelete({
-                email: accountdata.email
+                email: in_email
             })
-            return "Xóa thành công"
+            return result
         }catch(erorr){
             console.log(erorr)
         }      
     }
-    async getAccountById(id){
+    async getAccountByEmail(in_email){
         return await this.account.findOne({
-            _id: ObjectId.isValid(id) ? new ObjectId(id): null,
+            email: in_email,
+        })
+    }
+    async checkEmail(Email){
+        return await this.account.findOne({
+           email : Email
         })
     }
     

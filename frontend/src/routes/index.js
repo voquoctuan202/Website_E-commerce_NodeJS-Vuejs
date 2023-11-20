@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router"
+
 import ViewHome from "../views/ViewHome.vue"
 import ViewProduct from "../views/ViewProduct.vue"
 import ViewCart from "../views/ViewCart.vue"
@@ -6,13 +7,16 @@ import ViewUser from "../views/ViewUser.vue"
 import ViewLogin from "../views/ViewLogin.vue"
 import ViewRegister from "../views/ViewRegister.vue"
 import ViewDesProduct from "../views/ViewDesProduct.vue"
+import ViewHoaDon from "../views/ViewHoaDon.vue"
+import ViewDSDonHang from "../views/ViewDSDonHang.vue"
 
 import ViewAdminHome from "../views/ViewAdHome.vue"
 import ViewAdAddProducts from "../views/ViewAdAddProducts.vue"
 import ViewAdUsers from "../views/ViewAdUsers.vue"
+import ViewUpdateProduct from "../views/ViewUpdateProduct.vue"
+import ViewUpdateUserAd from "../views/ViewUpdateUserAd.vue"
+import ViewDSDonHangAd from "../views/ViewDSDonHangAd.vue"
 
-import ViewStaffHome from "../views/ViewStaffHome.vue"
-import ViewStaffAddProduct from "../views/ViewStaffAddProducts.vue"
 const routes = [
     {
         path: "/",
@@ -38,6 +42,19 @@ const routes = [
         path: "/des",
         name: "des",
         component: ViewDesProduct,
+        
+    },
+    {
+        path: "/bill",
+        name: "hoadon",
+        component: ViewHoaDon,
+        props: true 
+    },
+    {
+        path: "/dsDonHang",
+        name: "dsDonHang",
+        component: ViewDSDonHang,
+     
     },
 
     {
@@ -55,18 +72,22 @@ const routes = [
         name: "adminUser",
         component: ViewAdUsers,
     },
+    {
+        path: "/updateProduct",
+        name: "updateProduct",
+        component: ViewUpdateProduct,
+    },
+    {
+        path: "/updateUser",
+        name: "updateUser",
+        component: ViewUpdateUserAd,
+    },
+    {
+        path: "/adminDonHang",
+        name: "adminDonHang",
+        component: ViewDSDonHangAd,
+    },
 
-    {
-        path: "/staff",
-        name: "staffHome",
-        component: ViewStaffHome,
-    },
-    {
-        path: "/addProductStaff",
-        name: "addProductStaff",
-        component: ViewStaffAddProduct,
-    },
-    
     {
         path: "/login",
         name: "login",

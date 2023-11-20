@@ -9,9 +9,10 @@ class ProductService {
         const hangHoa = {
             maHH: payload.maHH,
             tenHH: payload.tenHH,
-            moTa: payload.mota,
+            mota: payload.mota,
             loai: payload.loai,
             gia: payload.gia,
+            hinh: payload.hinh,
             soLuong: payload.soLuong
         }
 
@@ -40,19 +41,51 @@ class ProductService {
         }
        
     }
-    async showProductById(id){
+    async showProductByMaHH(in_maHH){
         return await this.hangHoa.findOne({
-            _id: ObjectId.isValid(id) ? new ObjectId(id): null,
+            maHH: in_maHH
         })
     }
-    async deleteProduct(id){
+    async deleteProduct(in_maHH){
         
         try{
             const result = await this.hangHoa.findOneAndDelete({
-                _id: ObjectId.isValid(id) ? new ObjectId(id): null,
+                maHH: in_maHH,
             })
             return result
         
+        }catch(erorr){
+            console.log(erorr)
+        }
+    }
+    async minusProduct(in_maHH,sl){
+        const filter = {
+           maHH: in_maHH
+        }
+        const sp = await this.showProductByMaHH(in_maHH)
+        try{
+            const result = await this.hangHoa.findOneAndUpdate(
+                filter,
+                { $set: {soLuong: sp.soLuong- sl}},
+                { returnDocument: "after"}
+            )
+            return result;
+        }catch(erorr){
+            console.log(erorr)
+        }
+    }
+    async updateProduct(data){
+        const filter = {
+           maHH: data.maHH
+        }
+        const productdata= this.extractHangHoaData(data)
+        try{
+            const result = await this.hangHoa.findOneAndUpdate(
+                filter,
+                { $set: productdata},
+                { returnDocument: "after"}
+            )
+            return result;
         }catch(erorr){
             console.log(erorr)
         }
@@ -61,7 +94,7 @@ class ProductService {
         
         try{
             const productdata= this.extractHangHoaData(payload)
-        const checkmaHH =  await this.hangHoa.findOne({
+            const checkmaHH =  await this.hangHoa.findOne({
             maHH: productdata.maHH
         })
         if (checkmaHH) return "Hàng đã tồn tại"

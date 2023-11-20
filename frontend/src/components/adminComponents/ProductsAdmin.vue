@@ -5,7 +5,6 @@
 
         <table  id="table_xemhang">
           <tr >
-            <th>Số thứ tự</th>
             <th>Tên sản phẩm</th>
             <th>Đơn giá</th>
             <th>Số lượng còn lại</th>
@@ -13,13 +12,14 @@
             <th>Xóa</th>
           </tr>
           <tr v-for="product in products" :key="product.id">
-          
-              <th>{{ product.id }}</th>
-              <th>{{ product.name }}</th>
-              <th>{{ product.price }}</th>
-              <th>{{ product.sl }}</th>
-              <th><img class="img_hanghoa" :src="product.img" ></th>
-              <th><i class="fa fa-times" aria-hidden="true"></i></th>
+              
+                <th  @click="update(product)" >{{ product.tenHH }}</th>
+                <th @click="update(product)" >{{ dinhDangSoTien(product.gia)}}</th>
+                <th @click="update(product)" >{{ product.soLuong }}</th>
+                <th @click="update(product)"><img class="img_hanghoa" :src="product.hinh" ></th>
+              
+              
+              <th><i class="fa fa-times" aria-hidden="true" @click="del_product(product)"></i></th>
           </tr>
         </table>
           
@@ -56,20 +56,53 @@
 </style>
 
   <script>
+  import productsService from '../../services/products.service'
   export default {
     data() {
       return {
-        products: [
-          { id: 1, name: 'Iphone 15', price: 10, img:"/images/iphone.png", sl:10 },
-          { id: 2, name: 'Samsung S23', price: 20, img: "/images/samsung.png" , sl:32},
-          { id: 3, name: 'Product 3', price: 30, img: "" , sl: 23 },
-        ],
+        products: [],
       };
     },
+    props:{
+      products : {type: Array, default:[]}
+    },
+    emits:["delete:product"],
     methods: {
-      addToCart(product) {
-        // Implement the cart functionality here
+      async getall(){
+        this.products = await productsService.showall()
       },
+
+      dinhDangSoTien(soTien) {
+         
+         var chuoiSoTien = ""+soTien;
+         var viTriDauCham = chuoiSoTien.indexOf('.');
+
+         if (viTriDauCham === -1) {
+           viTriDauCham = chuoiSoTien.length;
+         }
+
+         for (var i = viTriDauCham - 3; i > 0; i -= 3) {
+           chuoiSoTien = chuoiSoTien.slice(0, i) + '.' + chuoiSoTien.slice(i);
+         }
+
+         chuoiSoTien += 'đ';
+
+         return chuoiSoTien;
+       },
+      update(data){
+        console.log("Cập nhật sản phẩm", data.maHH)
+        localStorage.product = JSON.stringify(data)
+        this.$router.push("/updateProduct")
+      },
+      async del_product(data){
+        let choice = confirm("Xác nhận xóa sản phẩm");
+        if (choice == true) {
+            this.$emit("delete:product",data.maHH)
+          
+        }
+        
+      }
+
     },
   };
   </script>

@@ -10,7 +10,7 @@
                     name="tentk"
                     type="text"
                     class="form-control"
-                    
+                    v-model="registerLocal.tentk"
                 />
                 <ErrorMessage name="tentk" class="error-feedback" />
         </div>
@@ -20,7 +20,7 @@
                     name="email"
                     type="email"
                     class="form-control"
-                    
+                    v-model="registerLocal.email"
                 />
                 <ErrorMessage name="email" class="error-feedback" />
         </div>
@@ -31,7 +31,7 @@
                     name="password"
                     type="password"
                     class="form-control"
-                    
+                    v-model="registerLocal.matkhau"
                 />
                 <ErrorMessage name="password" class="error-feedback" />
         </div>
@@ -41,7 +41,7 @@
                     name="password2"
                     type="password"
                     class="form-control"
-                    
+                    v-model="registerLocal.xnmatkhau"
                 />
                 <ErrorMessage name="password2" class="error-feedback" />
         </div>
@@ -81,7 +81,7 @@ export default{
     },
     emits: ["submit:register", ],
     props: {
-            register: { type: Object, required: true }
+            account: { type: Object, required: true }
         },
     data(){
         const registerFormSchema = yup.object().shape({
@@ -95,13 +95,12 @@ export default{
             
         });
         return {
-            registerLocal: this.register,
+            registerLocal: this.account,
             registerFormSchema,
         };
     },
     methods: {
             submitRegister() {
-                console.log("Đăng kí thành công")
                 this.$emit("submit:register", this.registerLocal);
             },
             backLogin(){
