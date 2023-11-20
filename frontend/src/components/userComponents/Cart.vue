@@ -4,7 +4,7 @@
       <div  id="giohang">
         <table  id="table_giohang">
           <tr>
-           
+            <th>Hình</th>
             <th>Tên sản phẩm</th>
             <th>Đơn giá</th>
             <th>Số lượng</th>
@@ -12,6 +12,7 @@
             <th>Xóa</th>
           </tr>
           <tr v-for="product in products" :key="product.id" style="">   
+              <td><img :src="getImgHHByMa(product.maHH)" class="img_cart">  </td>
               <td>{{ getTenHHByMa(product.maHH) }} </td>
               <td>{{ dinhDangSoTien(getGiaHHByMa(product.maHH))  }}</td>
               <td>{{ product.soluong }}</td>
@@ -141,6 +142,12 @@ body{
   margin-bottom: 10px;
   margin-right: 30px;
 }
+.img_cart{
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
 </style>
 
 <script>
@@ -196,8 +203,12 @@ body{
           thanhtien: this.thanhtien
 
         }
-        console.log(user.pttt)
-        this.$emit("update:thanhtoan",this.products,user,tien)
+        if(user.sdt==""||user.diachi==""||user.email==""){
+          window.alert("Vui lòng điền đầy đủ email, số điện thoại, địa chỉ")
+        }else{
+          this.$emit("update:thanhtoan",this.products,user,tien)
+        }
+        
   
       },
       removeFromCart(product) {
@@ -217,6 +228,14 @@ body{
           for(i in this.CTProduct){
             if(maHH == this.CTProduct[i].maHH){
               return this.CTProduct[i].gia
+            }
+          }   
+      },
+      getImgHHByMa(maHH){
+          var i
+          for(i in this.CTProduct){
+            if(maHH == this.CTProduct[i].maHH){
+              return this.CTProduct[i].hinh
             }
           }   
       },

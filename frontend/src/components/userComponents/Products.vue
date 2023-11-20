@@ -44,7 +44,8 @@
 
 }
 .item_product{
-  width: max-content;
+  width: 230px;
+ 
   margin: 8px;
   padding: 9px;
   border-radius: 5px;
@@ -72,7 +73,7 @@
 .name{
   text-decoration: none;
   font-weight: 600;
-  font-size: 20pt;
+  font-size: 18pt;
   color: black;
   background-color: white;
   
@@ -83,8 +84,10 @@
   width: 200px;
   height: 250px;
   border-radius: 5px;
-  background-color: aqua;
-
+}
+.img_product:hover{
+  width: 205px;
+  height: 255px;
 }
 .btn_add_cart{
   text-align: center;

@@ -25,6 +25,16 @@
                 <ErrorMessage name="ten_sanpham" class="error-feedback" />
         </div>
         <div class="form-group">
+            <label for="loai_sanpham">Loại</label>
+                <Field
+                    name="loai_sanpham"
+                    type="text"
+                    class="form-control"
+                    v-model="product.loai"
+                />
+                <ErrorMessage name="ten_sanpham" class="error-feedback" />
+        </div>
+        <div class="form-group">
             <label for="soluong">Số lượng</label>
                 <Field
                     name="soluong"

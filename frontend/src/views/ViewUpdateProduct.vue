@@ -22,7 +22,7 @@
         methods: {
          async UpdatePro(data){
            await productsService.UpdateProduct(data);
-            
+            this.$router.push('/admin')
          },
          getdata(){
             this.product = JSON.parse(localStorage.product)
